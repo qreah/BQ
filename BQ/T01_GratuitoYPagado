@@ -1,0 +1,40 @@
+SELECT 
+  
+  IF(SEM.Date IS NULL, Gratuito.DATE, SEM.DATE) As DATE,
+  IF(SEM.Impressions IS NULL, Gratuito.Visitas, SEM.Impressions) As Demanda,
+  IF(SEM.Leads IS NULL, Gratuito.Leads, SEM.Leads) As Leads,
+  ROUND(IF(SEM.Leads IS NULL, Gratuito.Leads/Gratuito.Visitas, SEM.Leads/SEM.Impressions),4) As RE,
+  SEM.Producto,
+  SEM.Territorio,
+  CampaignName,
+  ExternalCustomerId,
+  CampaignId,
+  Clicks,
+  Cost,
+  ROUND(CPC,4) AS CPC,
+  AvgPosition,
+  ROUND(CTR,4) AS CTR,
+  ROUND(LTR,4) AS LTR,
+  Cliente,
+  Cuenta,
+  ProductoBuscado,
+  PageName,
+  Soporte_COL,
+  CTA,
+  Area,
+  TipoGeneracion
+  
+FROM `mov-prod5.GenerationAlias.G10_FinalGratuitoAgregado` AS Gratuito
+ 
+FULL OUTER JOIN
+  (SELECT *
+   FROM `mov-prod5.GenerationAlias.AdwordsCampaigns` 
+   WHERE DATE = 'XXXX') AS SEM  -- Ej: 2018-12-
+  
+ON
+  SEM.DATE = Gratuito.DATE AND
+  SEM.Leads = Gratuito.Leads AND
+  SEM.Impressions = Gratuito.Visitas
+  
+ORDER BY
+  SEM.CampaignName

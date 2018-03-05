@@ -1,0 +1,34 @@
+SELECT
+  date,
+  hits.eventInfo.eventAction AS Action,
+  hits.eventInfo.eventLabel AS Label,
+  COUNT(hits.eventInfo.eventCategory) AS Impresiones,
+  /*SPLIT(Label, "_") AS Campo,*/
+  ARRAY_LENGTH(SPLIT(hits.eventInfo.eventLabel, "_")) AS Long,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(1)] AS Pers,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(2)] AS Segmento,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(3)] AS Territorio,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(4)] AS targetAud,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(5)] AS productoComunicado,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(6)] AS alias900,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(7)] AS aliasC2C,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(8)] AS planta,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(9)] AS testAB,
+  SPLIT(hits.eventInfo.eventLabel, "_")[ORDINAL(7)] AS alias
+ 
+FROM `api-project-964777417380.84523663.ga_sessions_*` AS GA,
+                unnest(GA.hits) AS hits
+ 
+WHERE 
+  _TABLE_SUFFIX = FORMAT_DATE("%Y%m%d", DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY))
+  --_TABLE_SUFFIX BETWEEN '20180206' AND '20180206'
+  AND hits.eventInfo.eventCategory LIKE "Personalizacion"
+  AND REGEXP_CONTAINs(lower(hits.eventInfo.eventAction), r'^web|^clic')
+  AND (REGEXP_CONTAINs(hits.eventInfo.eventAction, r'WEB-Carrusel-Multiproducto') = FALSE)
+  AND ARRAY_LENGTH(SPLIT(hits.eventInfo.eventLabel, "_"))=9
+   
+--group by 1--,2
+
+GROUP BY date, Label, Action
+ 
+ORDER BY Impresiones DESC

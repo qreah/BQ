@@ -1,0 +1,17 @@
+SELECT
+  Perso.*,
+  CDR.Alias_COL,
+  CDR.Leads
+FROM 
+  `mov-prod3.GenerationAlias.Perso` AS Perso
+
+LEFT JOIN 
+  (SELECT
+    FECHA,
+    Alias_COL,
+    Count(Alias_COL) AS Leads
+  FROM
+    `mov-prod3.Darwin.Tabla_GP_v1` 
+    GROUP BY FECHA, Alias_COL) AS CDR
+ON Perso.alias=CDR.Alias_COL AND
+REPLACE(CAST(CDR.FECHA AS STRING),"-","") = Perso.Date

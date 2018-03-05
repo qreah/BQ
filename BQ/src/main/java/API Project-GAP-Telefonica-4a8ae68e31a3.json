@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "api-project-964777417380",
+  "private_key_id": "4a8ae68e31a37496ef14f4acf790800df87ea6b4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDAhVZxdxoZ6SRA\nuREiev+prB/GFT4N/rEOuHHqzCikgvvy43JIhyS6TsLix8STEe1b3olPHKd7L0b3\nW5d/56KpMGsd5E8/ihbhaMLZJeGakeo0Au00cSOjKI337wHVpMfMfJXg8Lu0OABy\nKg3Il5rOFZpmFWn8vM8BloiklWL9EuF2gfvGCEV7D+efFL1K/5NSog804jTs7pDQ\noDlqQ5nornBRC7PDmoy6ZVt5yDSRwqn1FBlJyGuBHVqxGjbHCxA6P6ieFDM8x6W+\nV6AqWSDfAoAFdKgrmnNOrkdYqawNph90r2eEXBt1UkmvqFgfXLFw+BpVk5QQIVr2\nqxfdm31jAgMBAAECggEABwl4qOoVEqhiclkxZqS/Tpjjim6BV6qdFzAnvdDblXPS\nOMUWis8hyQuS9Q4fQc7wcaC3PSSLfKW0PttitMKnP+7so2mSefyWrIOTR7OqROeb\ne2419GpERrT3R349f20n/nH5WoECI2q+nW2rFk9wUaMZgyy6NIpEOMcjVHy/Yweq\n2vGd6hhjQ1fS8F6WUmqQeiDgsjKxA9W4q/WF4T65TxpbWxU5sLO9P5LzAg4I1CEC\nWLnT9kil0wEqUGKnNOWxqABqJhXZcyxywljOHpUgCnKn7oN47LALPc9uQvjfgfap\nCNj7y2OGfZJZEL5+HXeb2hT3lCaOwBqzDJrgpEbPXQKBgQDx80/RYp66LTNfZ37t\nhiwe3wUzQFizACu4UZyKSYuO7WCgmtk6ddyPoKefmS8fJ5k+LERYOnvO4z64Racs\nqbVU+AwmPgHos7jlF1Vp2CH3EmUqloEGebYKiUsAcuNIyZFinI4AX34XIdIgDURV\n8KUY8XSAeuGs6jeEe2WAhJ5YPQKBgQDLszxVRdTM5VYQL0zauOwnDyxY0j6thhcO\nZCuCYBR6JFK7TnlZ1s6BQviAgyNhzqJX/ShhWS+jp1QZyOh5/75Lj8dzXEciFXA4\n8//dXcjPVBnYwT/jS02gn+mZ4+PwS2Ipva3PnsSzyp8IVd4egaztppfjeRxaYwv3\nJnsNQkjmHwKBgBzGJO3v3pShn4RvGIdC96hMOaAYvPO8x3ZKLmW7zV8YF+/Buqfb\nMHncT1MJsrLv0Ke2OAKOIf8+w0zC69jB7hDG1xsNMMjt5sVH+x51V8S8aU+hSoLs\nopuqLENHZoRXhHTHzZN5x9MUcJrjOQdHcTsALCzDcGdSC3wz+KRKIVK5AoGBAML0\n9JWYlCbWiBxNaP0dZ8eqWgNYlex2HbMEZDAPzQlpolTqsnItiM9mTXiSClcd8XrN\nLMyfE11KVM+o3feFsZeYMIhUlTAl3JZl0UkI7ZyhHWu66W6dL9q/slA7MHlXbMgO\nZkAD8LczAip0JHaGHgAGJfDshRptGZKeHb9+5U55AoGASzwuvTeq61QCdnfMwLJc\nhZAHjqmIuWdSErd8rV8zqzwFXU3ClHKbYskm4/no31huxWCLJinsljbqqmkyU01U\nlMbUqK9EeL7C0vEQspFT+wUDYUL/lr4Fp44nbyg7g6BKe8kaPyF4wJw8c5HxQwyV\n0LuTPz5MLI9EqchE3mcKtJ0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "mov-tienda-bqga@api-project-964777417380.iam.gserviceaccount.com",
+  "client_id": "103443209303445237827",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mov-tienda-bqga%40api-project-964777417380.iam.gserviceaccount.com"
+}

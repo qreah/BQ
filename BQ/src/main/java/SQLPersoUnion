@@ -1,0 +1,2 @@
+SELECT * FROM `mov-prod3.GenerationAlias.PersoC2C` 
+UNION ALL SELECT * FROM `mov-prod3.GenerationAlias.Perso900`

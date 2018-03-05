@@ -1,0 +1,15 @@
+SELECT
+  DISTINCT CAST(_TABLE_SUFFIX AS STRING) AS Date,
+  hits.page.pagePath AS pageviews,
+  fullVisitorId,
+  visitId,
+  CusDim.value AS Pagename
+FROM
+  `api-project-964777417380.84523663.ga_sessions_*`,
+  UNNEST(hits) AS hits,
+  UNNEST(hits.customDimensions) AS CusDim
+WHERE
+  hits.type = 'PAGE'
+  AND CusDim.index = 50
+  AND _TABLE_SUFFIX BETWEEN 'XXXX' -- Ej: 20160129
+  AND 'XXXX'

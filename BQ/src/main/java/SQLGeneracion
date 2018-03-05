@@ -1,0 +1,41 @@
+SELECT 
+  
+  IF(SEM.Date IS NULL, Gratuito.DATE, SEM.DATE) As DATE,
+  IF(SEM.Impressions IS NULL, Gratuito.Impressions, SEM.Impressions) As Demanda,
+  IF(SEM.Leads IS NULL, Gratuito.Leads, SEM.Leads) As Leads,
+  ROUND(IF(SEM.Leads IS NULL, Gratuito.Leads/Gratuito.Impressions, SEM.Leads/SEM.Impressions),4) As RE,
+  IF(SEM.Producto IS NULL, Gratuito.Producto, SEM.Producto) As Producto,
+  IF(SEM.Territorio IS NULL, Gratuito.Vertical, SEM.Territorio) As Zona,
+  CampaignName,
+  ExternalCustomerId,
+  CampaignId,
+  Clicks,
+  Cost,
+  ROUND(CPC,4) AS CPC,
+  AvgPosition,
+  ROUND(CTR,4) AS CTR,
+  ROUND(LTR,4) AS LTR,
+  Cliente,
+  Cuenta,
+  ProductoBuscado,
+  Medio,
+  Seccion,
+  Pagina,
+  Alias,
+  SCValue,
+  PageName,
+  url,
+  Personalizacion,
+  Segmento,
+  Soporte 
+  
+FROM `mov-prod3.GenerationAlias.PaginasUnicasPagename` AS Gratuito
+FULL OUTER JOIN
+  `mov-prod3.DarwinMain.AdwordsCampaigns` AS SEM
+ON
+  SEM.DATE = Gratuito.DATE AND
+  SEM.Leads = Gratuito.Leads AND
+  SEM.Impressions = Gratuito.Impressions AND
+  SEM.Producto = Gratuito.Producto
+ORDER BY
+  SEM.CampaignName
