@@ -2,6 +2,8 @@ package BQ;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
 import javax.servlet.ServletConfig;
@@ -41,6 +43,7 @@ public class prueba extends HttpServlet {
 		response.setContentType("text/html");
 		
 		PrintWriter out = response.getWriter();
+		String fecha = request.getParameter("Fecha");
 		//try {
 		//BQ.prueba();
 		/*
@@ -66,13 +69,16 @@ public class prueba extends HttpServlet {
 		}
 		*/
 		
-		try {
+		
 			
-			BQ.AjustarImpresiones();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				BQ.ActualizarBDPerso(fecha);
+			} catch (TimeoutException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		
 		
 		
 		//BQ.ActualizarBDPerso("20180206");
@@ -117,7 +123,10 @@ public class prueba extends HttpServlet {
 			//e.printStackTrace();
 			//out.println(e);
 		//}
-		out.println("Ok. Operación realizada con éxito");
+		Date ahora = new Date();
+		SimpleDateFormat formateador = new SimpleDateFormat("hh:mm:ss");
+		formateador.format(ahora);
+		out.println("Ok. Operación realizada con éxito: " + formateador.format(ahora));
 	}
 
 	/**

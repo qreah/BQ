@@ -3,6 +3,8 @@ package BQ;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
 import javax.servlet.ServletConfig;
@@ -47,16 +49,12 @@ public class bqServlet extends HttpServlet {
 		
 		String Subject = "Alarma: bajada de leads en GP";
 		String Body = "Accede a este enlace para acceder a la alarma: https://generacion-dot-mov-prod3.appspot.com/alarmaServlet";
-		qhrea.enviarMail("rafael.fayosoliver@telefonica.com, begona.delgadopena@telefonica.com, pablo.cerrolazamenendez@telefonica.com", Subject, Body);
+		qhrea.enviarMail("rafael.fayosoliver@telefonica.com", Subject, Body);
 			
 		Subject = "Alarma: bajada de leads en Empresas";
 		Body = "Accede a este enlace para acceder a la alarma: https://generacion-dot-mov-prod3.appspot.com/alarmaServletEmp";
-		qhrea.enviarMail("rafael.fayosoliver@telefonica.com, begona.delgadopena@telefonica.com, pablo.cerrolazamenendez@telefonica.com", Subject, Body);
+		qhrea.enviarMail("rafael.fayosoliver@telefonica.com", Subject, Body);
 			
-		
-		
-		
-		
 		try {
 		//	BQ.ActualizarBDGratuito("20180129");
 			BQ.ProcesarGratuito();
@@ -93,7 +91,11 @@ public class bqServlet extends HttpServlet {
 			//e.printStackTrace();
 			//out.println(e);
 		//}
-		out.println("Ok. Operación realizada con éxito");
+		
+		Date ahora = new Date();
+		SimpleDateFormat formateador = new SimpleDateFormat("hh:mm:ss");
+		formateador.format(ahora);
+		out.println("Ok. Operación realizada con éxito: " + formateador.format(ahora));
 	}
 
 	/**

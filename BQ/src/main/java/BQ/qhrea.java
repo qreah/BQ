@@ -56,6 +56,7 @@ public class qhrea {
 	        message.addRecipients(Message.RecipientType.TO, destinatario);//Se podrían añadir varios de la misma manera
 	        message.setSubject(asunto);
 	        message.setText(cuerpo);
+	        message.setContent(cuerpo,"text/html; charset=utf-8");
 	        Transport transport = session.getTransport("smtp");
 	        transport.connect("smtp.gmail.com", remitente, clave);	        
 	        transport.sendMessage(message, message.getAllRecipients());

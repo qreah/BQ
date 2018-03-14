@@ -84,14 +84,54 @@ public class BQ {
 		}
 		
 	
+	public static void runQuery(QueryJobConfiguration queryConfig)
+	    throws TimeoutException, InterruptedException, IOException {
+	  //BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+		BigQuery bigquery = AuthBQ();
+	  // Create a job ID so that we can safely retry.
+	  JobId jobId = JobId.of(UUID.randomUUID().toString());
+	  Job queryJob = bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build());
+	
+	  // Wait for the query to complete.
+	  queryJob = queryJob.waitFor();
+	
+	  // Check for errors
+	  if (queryJob == null) {
+	    throw new RuntimeException("Job no longer exists");
+	  } else if (queryJob.getStatus().getError() != null) {
+	    // You can also look at queryJob.getStatus().getExecutionErrors() for all
+	    // errors, not just the latest one.
+	    throw new RuntimeException(queryJob.getStatus().getError().toString());
+	  }
+	
+	  // Get the results.
+	  QueryResponse response = bigquery.getQueryResults(jobId);
+	
+	    TableResult result = queryJob.getQueryResults();
+	
+	    
+	    while (result != null) {
+	        for (List<FieldValue> row : result.iterateAll()) {
+	          for (FieldValue val : row) {
+	            //System.out.printf("%s,", val.toString());
+	          }
+	          //System.out.printf("\n");
+	        }
+	
+	        result = result.getNextPage();
+	    }
+	
+	}
+
+
 	public static void CrearTabla(String NombreTabla, String datasetName) throws IOException {
 		
 		//Abrir base de datos
 		BigQuery bigquery = AuthBQ();
 		Dataset dataset = bigquery.getDataset(datasetName);
-	    System.out.println("Dataset: " + dataset.getDescription());
+	    
 	    String datasetId = dataset.getDatasetId().getDataset();
-	    System.out.println("DatasetID: " + datasetId);
+	    
 		//TableId tableId = TableId.of(datasetId, NombreTabla);
 		Field stringField = Field.of("StringField", LegacySQLTypeName.STRING);
 		Schema schema = Schema.of(stringField);
@@ -116,7 +156,7 @@ public class BQ {
 		BigQuery bigquery = AuthBQ();
 		//BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
 		
-		System.out.println(SQL);
+		
 		
 		QueryJobConfiguration queryConfig = 
 		    QueryJobConfiguration.newBuilder(SQL)
@@ -169,7 +209,7 @@ public class BQ {
 		  }
 		  // Get the results.
 		  Long primerCampo = queryJob.getQueryResults().getTotalRows();
-		  System.out.println("primerCampo: " + primerCampo);
+		  
 		  Schema  Campos = queryJob.getQueryResults().getSchema();
 		  
 		  	  
@@ -272,10 +312,11 @@ public class BQ {
 		    while (result != null) {
 		        for (List<FieldValue> row : result.iterateAll()) {
 		          for (FieldValue val : row) {
-		            System.out.printf("%s,", val.toString());
+		            //System.out.printf("%s,", val.toString());
 		        	resultado = row.get(0).getStringValue();
+		        	
 		          }
-		          System.out.printf("\n");
+		          //System.out.printf("\n");
 		        }
 
 		        result = result.getNextPage();
@@ -343,45 +384,6 @@ public class BQ {
 	}
 
 
-	public static void runQuery(QueryJobConfiguration queryConfig)
-		    throws TimeoutException, InterruptedException, IOException {
-		  //BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
-			BigQuery bigquery = AuthBQ();
-		  // Create a job ID so that we can safely retry.
-		  JobId jobId = JobId.of(UUID.randomUUID().toString());
-		  Job queryJob = bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build());
-
-		  // Wait for the query to complete.
-		  queryJob = queryJob.waitFor();
-
-		  // Check for errors
-		  if (queryJob == null) {
-		    throw new RuntimeException("Job no longer exists");
-		  } else if (queryJob.getStatus().getError() != null) {
-		    // You can also look at queryJob.getStatus().getExecutionErrors() for all
-		    // errors, not just the latest one.
-		    throw new RuntimeException(queryJob.getStatus().getError().toString());
-		  }
-
-		  // Get the results.
-		  QueryResponse response = bigquery.getQueryResults(jobId);
-
-		    TableResult result = queryJob.getQueryResults();
-
-		    
-		    while (result != null) {
-		        for (List<FieldValue> row : result.iterateAll()) {
-		          for (FieldValue val : row) {
-		            //System.out.printf("%s,", val.toString());
-		          }
-		          //System.out.printf("\n");
-		        }
-
-		        result = result.getNextPage();
-		    }
-
-		}
-	
 	public static void AddFechaEnFichero2(String Fichero, String Fecha) throws IOException {
 		 
 		String path = System.getProperty("user.dir");
@@ -485,7 +487,7 @@ public class BQ {
 		
 		//Incluir las fechas en los ficheros SQL
 		String Fecha2 = Fecha.substring(0, 4) + "-" + Fecha.substring(4, 6)  + "-" + Fecha.substring(6,8);
-		System.out.println("Fecha2 = " + Fecha2);
+		
 		AddFechaEnFichero("G01_CDRFiltrado", Fecha2);
 		AddFechaEnFichero("T01_GratuitoYPagado", Fecha2);
 		AddFechaEnFichero("G04_SesionesUnicas", Fecha);
@@ -651,7 +653,6 @@ public class BQ {
 		// If comp = 0 it is that evertything is updated
 		
 		if (comp == 0) {
-			qhrea q = new qhrea();
 			String Asunto = "Actualización base de datos";
 			String Cuerpo = "Se ha intentado actualizar la base datos pero ya está actualizada"; 
 			qhrea.enviarMail("rafael.fayosoliver@telefonica.com", Asunto, Cuerpo);
@@ -675,15 +676,15 @@ public class BQ {
 				
 				long dif = calMAXDATE_Adwords.getTimeInMillis()-calMAXDATE_Generacion.getTimeInMillis();
 				dif = dif / (24 * 60 * 60 * 1000);
-				System.out.println("Adwords Date: " + MAXDATE_Adwords);
-				System.out.println("dif: " + dif);
+				//System.out.println("Adwords Date: " + MAXDATE_Adwords);
+				//System.out.println("dif: " + dif);
 				for (int i = 1; i <= dif; i++) {
 					Calendar calendario = calMAXDATE_Generacion;
 					calendario.add(Calendar.DAY_OF_MONTH, 1);
 					String strdate = df.format(calendario.getTime());
-					System.out.println("Fechas a procesar: " + strdate);
+					//System.out.println("Fechas a procesar: " + strdate);
 					strdate = strdate.replace("-", "");
-					System.out.println("Fechas a procesar: " + strdate);
+					//System.out.println("Fechas a procesar: " + strdate);
 					qhrea q = new qhrea();
 					String Asunto = "Actualización Base de Datos Generación";
 					String Cuerpo = "La base de datos ya se ha acatualizado. Se ha(n) actualizado" + dif + "día(s)";
@@ -694,6 +695,7 @@ public class BQ {
 					//qhrea.enviarMail("begona.delgadopena@telefonica.com", Asunto, Cuerpo);
 					//qhrea.enviarMail("laura.avilesfiguerola@telefonica.com", Asunto, Cuerpo);
 					ActualizarBDGratuito(strdate);
+					ActualizarBDPerso(strdate);
 				}
 				
 			}
@@ -712,25 +714,27 @@ public class BQ {
 	 */
 		
 	public static void ActualizarBDPerso(String Fecha) throws IOException, TimeoutException, InterruptedException {
+		
+		//TODO revisar las consultas de la tabla SQLTabla
 		String Dataset = "GenerationAlias";
 		String Project = "mov-prod5";
 		AddFechaEnFichero("P01_SQLPerso900", Fecha);
 		AddFechaEnFichero("P01_SQLPersoC2C", Fecha);
 		String Fecha2 = Fecha.substring(0, 4) + "-" + Fecha.substring(4, 6)  + "-" + Fecha.substring(6,8);
-		System.out.println(Fecha2);
-		AddFechaEnFichero("G01_CDRFiltrado", Fecha2);
+		
+		AddFechaEnFichero("P00_CDR", Fecha2);
 		
 		
-		String TablaCDR = "G01_CDRFiltrado";
+		String TablaCDR = "P00_CDR";
 		BQ.BorrarTabla(Project, Dataset, TablaCDR);
 		String SQLCDR = SQL(TablaCDR);
 		System.out.println("SQL Perso: " + SQLCDR);
-		BQ.EjecutarConsultaNuevaTabla(SQLCDR, Project, Dataset, TablaCDR);
+		BQ.EjecutarConsultaNuevaTabla(SQLCDR, Project, Dataset, TablaCDR); 
 		
 		String Tabla900 = "P01_SQLPerso900";
 		BQ.BorrarTabla(Project, Dataset, Tabla900);
 		String SQL900 = SQL(Tabla900);
-		System.out.println("SQL Perso: " + SQL900);
+		//System.out.println("SQL Perso: " + SQL900);
 		BQ.EjecutarConsultaNuevaTabla(SQL900, Project, Dataset, Tabla900);
 		
 		String TablaC2C = "P01_SQLPersoC2C";
@@ -738,28 +742,46 @@ public class BQ {
 		String SQLC2C = SQL(TablaC2C); 
 		BQ.EjecutarConsultaNuevaTabla(SQLC2C, Project, Dataset, TablaC2C);
 		
+		/*
 		String TablaPersoCDR = "P03_PersoyCDR";
 		BQ.BorrarTabla(Project, Dataset, TablaPersoCDR);
 		String SQLPersoCDR = SQL(TablaPersoCDR); 
 		BQ.EjecutarConsultaNuevaTabla(SQLPersoCDR, Project, Dataset, TablaPersoCDR);
+		*/
 		
 		String TablaCDRyGA = "P06_CDR_GA";
 		BQ.BorrarTabla(Project, Dataset, TablaCDRyGA);
 		String SQLCDRyGA = SQL(TablaCDRyGA); 
 		BQ.EjecutarConsultaNuevaTabla(SQLCDRyGA, Project, Dataset, TablaCDRyGA);
 		
-		BQ.GetionarIncidencia(Fecha);
+		/*
+		String TablaGA = "P06_GA";
+		BQ.BorrarTabla(Project, Dataset, TablaGA);
+		String SQLGA = SQL(TablaGA); 
+		BQ.EjecutarConsultaNuevaTabla(SQLGA, Project, Dataset, TablaGA);
+		*/
+		
+		// TODO Poner todas estas funciones que dependan sólo de la fecha
+		// TODO asegurar que todas las tablas tienen la fecha adecuada
+		BQ.AjustarImpresiones();
+		BQ.PonerRegistrosACero("GenerationAlias", "P06_CDR_GA", "Leads");
+		BQ.GestionarIncidencia(Fecha);
+		
+		
+		String SQLAcum = "INSERT `mov-prod5.GenerationAlias.T02_PERSONALIZACION` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) SELECT * FROM `mov-prod5.GenerationAlias.P07_PersoFinal`";
+		BQ.InsertarRegistros(SQLAcum);
+		
 		
 		
 		QuitarFechaEnFichero("P01_SQLPerso900", Fecha);
 		QuitarFechaEnFichero("P01_SQLPersoC2C", Fecha);
-		QuitarFechaEnFichero("G01_CDRFiltrado", Fecha2);
+		QuitarFechaEnFichero("P00_CDR", Fecha2);
 		
 		
 	}
 
 	
-	public static void GetionarIncidencia(String Fecha) throws TimeoutException, InterruptedException, IOException {
+	public static void GestionarIncidencia(String Fecha) throws TimeoutException, InterruptedException, IOException {
 		
 		String Dataset = "GenerationAlias";
 		String Project = "mov-prod5";
@@ -770,30 +792,46 @@ public class BQ {
 		BQ.EjecutarConsultaNuevaTabla(SQLIncidencia, Project, Dataset, TablaIncidencia);
 		
 		//Crear registro del día con incidencia y los leads asociados y borrar
-				//los leads de los registros con los alias 900104752 y 900104752-C2C
-				String SQLIncidencia900104752 = "SELECT DISTINCT Leads FROM `mov-prod5.GenerationAlias.P06_Incidencia` WHERE Alias = '900104752'";
-				System.out.println("SQLIncidencia900104752: " + SQLIncidencia900104752);
-				String LeadsIncidencia900104752 = SacarDato(SQLIncidencia900104752);
-				String SQLIncidencia900104752C2C = "SELECT DISTINCT Leads FROM `mov-prod5.GenerationAlias.P06_Incidencia` WHERE Alias = '900104752-C2C'";
-				String LeadsIncidencia900104752C2C = SacarDato(SQLIncidencia900104752C2C);
-				String SQLUpdate = "UPDATE `mov-prod5.GenerationAlias.P06_Incidencia` " + 
-						"SET Leads = 0 " + 
-						"WHERE Alias = '900104752' OR Alias = '900104752-C2C'";
-				UpdateTabla(SQLUpdate, Dataset, "P06_Incidencia"); 
+		//los leads de los registros con los alias 900104752 y 900104752-C2C
+		String SQLIncidencia900104752 = "SELECT DISTINCT Leads FROM `mov-prod5.GenerationAlias.P06_Incidencia` WHERE Alias = '900104752'";
+		//System.out.println("SQLIncidencia900104752: " + SQLIncidencia900104752);
+		
+		String LeadsIncidencia900104752 = SacarDato(SQLIncidencia900104752);
+		if (LeadsIncidencia900104752 == null){
+			LeadsIncidencia900104752= "0";
+		} else {
+			LeadsIncidencia900104752 = SacarDato(SQLIncidencia900104752);
+		}
+		
+		String SQLIncidencia900104752C2C = "SELECT DISTINCT Leads FROM `mov-prod5.GenerationAlias.P06_Incidencia` WHERE Alias = '900104752-C2C'";
+		
+		String LeadsIncidencia900104752C2C;
+		if (SacarDato(SQLIncidencia900104752C2C) == null){
+			LeadsIncidencia900104752C2C= "0";
+		} else {
+			LeadsIncidencia900104752C2C = SacarDato(SQLIncidencia900104752C2C);
+		}
+		
+		
+		String SQLUpdate = "UPDATE `mov-prod5.GenerationAlias.P06_Incidencia` " + 
+				"SET Leads = 0 " + 
+				"WHERE Alias = '900104752' OR Alias = '900104752-C2C'";
+		UpdateTabla(SQLUpdate, Dataset, "P06_Incidencia"); 
 				
-				//System.out.println("LeadsIncidencia: " + LeadsIncidencia);
-				/*
-				String SQLInsert = "INSERT `mov-prod5.GenerationAlias.P06_Error` (date, Label, Leads) "
-					+ "VALUES ('" 
-					+ Fecha 
-					+ "', 'Incidencia', " + LeadsIncidencia + ")";
-				*/
+		//System.out.println("LeadsIncidencia: " + LeadsIncidencia);
+		/*
+		String SQLInsert = "INSERT `mov-prod5.GenerationAlias.P06_Error` (date, Label, Leads) "
+			+ "VALUES ('" 
+			+ Fecha 
+			+ "', 'Incidencia', " + LeadsIncidencia + ")";
+		*/
 				
-				String SQLInsert1 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752 + ", '900104752', '900104752', '', 'Incidencia 900104752', '','', '', '', '', '', '', '')";
-				
-				UpdateTabla(SQLInsert1, Dataset, "P06_Incidencia");
-				String SQLInsert2 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752C2C + ", '900104752-C2C', '900104752-C2C', '', 'Incidencia 900104752-C2C', '','', '', '', '', '', '', '')";
-				UpdateTabla(SQLInsert2, Dataset, "P06_Incidencia");
+		String SQLInsert1 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752 + ", '900104752', '900104752', '', 'Incidencia 900104752', '','', '', '', '', '', '', '')";
+			
+		UpdateTabla(SQLInsert1, Dataset, "P06_Incidencia");
+		String SQLInsert2 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752C2C + ", '900104752-C2C', '900104752-C2C', '', 'Incidencia 900104752-C2C', '','', '', '', '', '', '', '')";
+		
+		UpdateTabla(SQLInsert2, Dataset, "P06_Incidencia");
 	}
 
 	
@@ -805,7 +843,7 @@ public class BQ {
 				" ORDER BY Alias_COL";
 		String Update = "UPDATE `mov-prod5.GenerationAlias.P06_CDR_GA` SET Impresiones = CASE Alias_COL ";
 		String ListaAlias = "WHERE Alias_COL IN (";
-		System.out.println("SQL: " + SQL);
+		
 		QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(SQL).build();
 		BigQuery bigquery = AuthBQ();
 		JobId jobId = JobId.of(UUID.randomUUID().toString());
@@ -841,7 +879,7 @@ public class BQ {
 					Long LeadsAnterior = rowAnterior.get(2).getLongValue();
 					if (Label.equals(rowAnterior.get(6).getStringValue())) {
 						if (Impresiones.equals(rowAnterior.get(1).getLongValue())) {
-							System.out.println("Alias_COL: " + row.get(3).getStringValue());
+							
 							
 							NewImpresiones = (float) ((float)(Leads/((float)Leads+(float)LeadsAnterior))*(float)Impresiones*2);
 							NewImpresiones = Math.round((double)NewImpresiones);
@@ -863,7 +901,8 @@ public class BQ {
 				i++;
 				rowAnterior = row;
 				Long LeadsAnterior = rowAnterior.get(2).getLongValue();
-				Long ImpresionesAnterior = rowAnterior.get(1).getLongValue();
+				System.out.printf("Leads Anterior" + LeadsAnterior);
+				//Long ImpresionesAnterior = rowAnterior.get(1).getLongValue();
 		          //System.out.printf("\n");
 		    }
 
@@ -872,7 +911,7 @@ public class BQ {
 		
 		ListaAlias = ListaAlias.substring(0, ListaAlias.length()-2);
 		Update = Update + " END " + ListaAlias + ")";
-		System.out.println(Update);
+		
 		
 		
 	}
@@ -922,25 +961,32 @@ public class BQ {
 		//los leads de los registros con los alias 900104752 y 900104752-C2C
 		String SQLIncidencia = "SELECT SUM(Leads) FROM `mov-prod3.GenerationAlias.PersoFinal` WHERE Alias = '900104752' OR Alias = '900104752-C2C'";
 		String LeadsIncidencia = SacarDato(SQLIncidencia);
-		System.out.println("LeadsIncidencia: " + LeadsIncidencia);
+		
 		String SQLInsert = "INSERT `mov-prod3.GenerationAlias.PersoFinal` (date, Label, Leads) "
 				+ "VALUES (" 
 				//+ "FORMAT_DATE(\"%Y%m%d\", DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY))"
 				+ "'20180206'"
 				+ ", 'Incidencia', " + LeadsIncidencia + ")";
-		System.out.println("SQLInsert: " + SQLInsert);
+		
 		UpdateTabla(SQLInsert, Dataset, TablaPersoFinal);
 		String SQLUpdate = "UPDATE `mov-prod3.GenerationAlias.PersoFinal` " + 
 				"SET Leads = 0 " + 
 				"WHERE Alias = '900104752' OR Alias = '900104752-C2C'";
 		UpdateTabla(SQLUpdate, Dataset, TablaPersoFinal); 
 		
-		
-		
-		
-		
 	}
 
+	/*
+	 * 	Mira alias que sean erróneos porque para varios Label tienen el mismo alias
+	 * 	y pone los leads a cero menos el que tiene más impresiones
+	 * 	Input:
+	 * 		- Dataset: Dataset de trabajo
+	 * 		- Tabla: Tabla donde se produce el error (P06_AUX)
+	 * 		- Campo
+	 * 	Output:
+	 * 		- none
+	 */
+	
 
 	public static void PonerRegistrosACero(String Dataset, String Tabla, String Campo) throws TimeoutException, InterruptedException, IOException {
 	List<String> ListaAliasError = new ArrayList<String>();
@@ -952,17 +998,17 @@ public class BQ {
 	
 	while (i < ListaAliasError.size()) {
 		
-		System.out.println(ListaAliasError.get(i));
+		
 		
 		String SQLSELECT = "SELECT Label FROM  `mov-prod5." + Dataset + "." + Tabla + "` " + 
 				"WHERE Alias = '" + ListaAliasError.get(i) + "' ORDER BY Impresiones DESC LIMIT 1";
-		System.out.println("SQL: " + SQLSELECT);
+		
 		String Label = BQ.SacarDato(SQLSELECT);
 		
 		String SQLUpdate = "UPDATE `mov-prod5." + Dataset + "." + Tabla + "` " + 
 				"SET " + Campo + " = 0 " + 
 				"WHERE Alias = '" + ListaAliasError.get(i) + "' AND Label NOT LIKE '" + Label + "'";
-		System.out.println("SQL: " + SQLUpdate);
+		
 		UpdateTabla(SQLUpdate, Dataset, Tabla); 
 		i++;
 		
@@ -1011,7 +1057,7 @@ public class BQ {
 		        			
 			        		aliasErroneoAnterior = aliasErroneo;
 				            ListaAliasError.add(aliasErroneo);
-				            System.out.println(aliasErroneo);
+				            
 		        			
 		        		}
 		        	}
