@@ -286,7 +286,7 @@ public class BQ {
 			    QueryJobConfiguration.newBuilder(SQL)
 			    .build();
 		BigQuery bigquery = AuthBQ();
-
+		System.out.println(SQL);
 		  // Create a job ID so that we can safely retry.
 		  JobId jobId = JobId.of(UUID.randomUUID().toString());
 		  Job queryJob = bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build());
@@ -857,10 +857,10 @@ public class BQ {
 			+ "', 'Incidencia', " + LeadsIncidencia + ")";
 		*/
 				
-		String SQLInsert1 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752 + ", '900104752', '900104752', '', 'Incidencia 900104752', '','', '', '', '', '', '', '')";
+		String SQLInsert1 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752 + ", '900104752', '900104752', 'Incidencia', 'Incidencia 900104752', '','', '', '', '', '', '', '')";
 		System.out.println("SQLInsert1: " + SQLInsert1);
 		UpdateTabla(SQLInsert1, Dataset, "P06_Incidencia");
-		String SQLInsert2 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752C2C + ", '900104752-C2C', '900104752-C2C', '', 'Incidencia 900104752-C2C', '','', '', '', '', '', '', '')";
+		String SQLInsert2 = "INSERT `mov-prod5.GenerationAlias.P06_Incidencia` (DATE, Impresiones, Leads, Alias_COL, alias, Action, Label, Pers, Segmento, Territorio, targetAud, productoComunicado, planta, testAB, Soporte_COL) VALUES('" + Fecha + "', 0, " + LeadsIncidencia900104752C2C + ", '900104752-C2C', '900104752-C2C', 'Incidencia', 'Incidencia 900104752-C2C', '','', '', '', '', '', '', '')";
 		
 		UpdateTabla(SQLInsert2, Dataset, "P06_Incidencia");
 	}

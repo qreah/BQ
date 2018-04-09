@@ -1,0 +1,77 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+  	<servlet-name>bqServlet</servlet-name>
+  	<display-name>bqServlet</display-name>
+  	<description></description>
+  	<servlet-class>BQ.bqServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>bqServlet2</servlet-name>
+  	<display-name>bqServlet2</display-name>
+  	<description></description>
+  	<servlet-class>BQ.bqServlet2</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>Autenticador</servlet-name>
+  	<display-name>Autenticador</display-name>
+  	<description></description>
+  	<servlet-class>BQ.Autenticador</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>alarmaServlet</servlet-name>
+  	<display-name>alarmaServlet</display-name>
+  	<description></description>
+  	<servlet-class>BQ.alarmaServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>alarmaServletEmp</servlet-name>
+  	<display-name>alarmaServletEmp</display-name>
+  	<description></description>
+  	<servlet-class>BQ.alarmaServletEmp</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>prueba</servlet-name>
+  	<display-name>prueba</display-name>
+  	<description></description>
+  	<servlet-class>BQ.prueba</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>undiacualquiera</servlet-name>
+  	<display-name>undiacualquiera</display-name>
+  	<description></description>
+  	<servlet-class>BQ.undiacualquiera</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>bqServlet</servlet-name>
+  	<url-pattern>/bqServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>bqServlet2</servlet-name>
+  	<url-pattern>/bqServlet2</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Autenticador</servlet-name>
+  	<url-pattern>/Autenticador</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>alarmaServlet</servlet-name>
+  	<url-pattern>/alarmaServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>alarmaServletEmp</servlet-name>
+  	<url-pattern>/alarmaServletEmp</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>prueba</servlet-name>
+  	<url-pattern>/prueba</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>undiacualquiera</servlet-name>
+  	<url-pattern>/undiacualquiera</url-pattern>
+  </servlet-mapping>
+</web-app>

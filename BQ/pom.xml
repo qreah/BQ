@@ -31,6 +31,10 @@
 
   </properties>
   
+  <prerequisites>
+      <maven>3.0</maven>
+  </prerequisites>
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -63,6 +67,28 @@
         <artifactId>mail</artifactId>
         <version>1.4</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-ml</artifactId>
+      <version>v1-rev40-1.23.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-core 
+<dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-core</artifactId>
+    <version>1.22.0</version>
+</dependency>
+<dependency>
+  <groupId>com.google.api-client</groupId>
+  <artifactId>google-api-client-xml</artifactId>
+  <version>1.23.0</version>
+</dependency>
+<dependency>
+	<groupId>com.google.appengine</groupId>
+	<artifactId>appengine-api-1.0-sdk</artifactId>
+	<version>1.9.55</version>
+</dependency>
+-->
 
 </dependencies>
   <build>
